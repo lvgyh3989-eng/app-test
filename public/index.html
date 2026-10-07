@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MassUp V2</title>
+<style>
+:root{--bg:#080a0d;--panel:#11151a;--panel2:#171d23;--line:#28303a;--text:#f4f7f9;--muted:#9ba7b3;--a:#b8ff4a;--danger:#ff7c7c;--blue:#77b8ff}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 80% 0,#1b270f 0,#080a0d 35%);color:var(--text);font-family:Inter,system-ui,sans-serif}button,input,select{font:inherit}button{cursor:pointer}
+.hidden{display:none!important}.app{min-height:100vh;display:grid;grid-template-columns:230px 1fr}.side{border-right:1px solid var(--line);padding:22px 14px;background:#090b0e}.brand{font-size:25px;font-weight:900;padding:8px 10px 25px}.brand span{color:var(--a)}.nav button{width:100%;text-align:left;background:transparent;color:var(--muted);border:0;border-radius:12px;padding:12px;margin:2px 0}.nav button.active,.nav button:hover{background:var(--panel2);color:var(--text)}
+.main{max-width:1400px;width:100%;padding:28px;margin:auto}.top{display:flex;justify-content:space-between;align-items:center;margin-bottom:25px}.eyebrow{font-size:11px;text-transform:uppercase;letter-spacing:.14em;color:var(--a);font-weight:800}.title{font-size:31px;font-weight:900}.avatar{width:42px;height:42px;border-radius:50%;background:var(--a);color:#0c1205;display:grid;place-items:center;font-weight:900}
+.grid{display:grid;grid-template-columns:repeat(12,1fr);gap:15px}.card{background:linear-gradient(180deg,var(--panel),#0e1216);border:1px solid var(--line);border-radius:18px;padding:19px}.span3{grid-column:span 3}.span4{grid-column:span 4}.span6{grid-column:span 6}.span8{grid-column:span 8}.full{grid-column:1/-1}
+.kpi .label{font-size:12px;color:var(--muted)}.kpi .value{font-size:26px;font-weight:900;margin-top:8px}.muted{color:var(--muted)}h2{margin:0 0 14px;font-size:18px}h3{margin:0 0 6px}.btn{border:1px solid var(--line);background:var(--panel2);color:var(--text);padding:10px 14px;border-radius:11px;font-weight:750}.btn.primary{background:var(--a);color:#101600;border-color:var(--a)}.row{display:flex;gap:9px;flex-wrap:wrap;align-items:center}.between{display:flex;justify-content:space-between;align-items:center;gap:10px}.tag{font-size:11px;padding:5px 9px;border-radius:999px;background:#20262d;color:var(--muted)}
+.progress{height:9px;background:#252d35;border-radius:99px;overflow:hidden}.progress i{height:100%;display:block;background:var(--a);border-radius:99px}.listrow{display:flex;justify-content:space-between;gap:15px;padding:13px 0;border-top:1px solid var(--line)}.listrow:first-child{border-top:0}
+.chart{height:230px}.chart svg{width:100%;height:100%}.axis{stroke:#303840}.line{fill:none;stroke:var(--a);stroke-width:4;stroke-linecap:round;stroke-linejoin:round}.dot{fill:var(--a)}
+.workout{padding:15px 0;border-top:1px solid var(--line)}.workout:first-child{border-top:0}.exercise{display:flex;justify-content:space-between;padding:9px 0;color:var(--muted)}
+.auth{min-height:100vh;display:grid;place-items:center;padding:20px}.authbox{width:min(520px,100%);background:var(--panel);border:1px solid var(--line);border-radius:22px;padding:28px}.authbox h1{font-size:36px;margin:0}.field{margin:12px 0}.field label{display:block;color:var(--muted);font-size:12px;margin-bottom:6px}.field input,.field select{width:100%;padding:12px;border:1px solid var(--line);background:#0b0e12;color:var(--text);border-radius:10px}.formgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.modal{position:fixed;inset:0;background:#000c;display:grid;place-items:center;padding:18px;z-index:10}.modalbox{width:min(650px,100%);max-height:90vh;overflow:auto;background:#11151a;border:1px solid var(--line);border-radius:20px;padding:23px}.modalhead{display:flex;justify-content:space-between;align-items:center}.notice{padding:13px;border:1px solid #5b4b20;background:#1a1710;border-radius:12px}.coach{height:620px;display:flex;flex-direction:column}.messages{flex:1;overflow:auto}.msg{max-width:82%;padding:11px 13px;border-radius:14px;margin:8px 0;font-size:14px;line-height:1.45}.msg.ai{background:#1a2026}.msg.me{background:var(--a);color:#101600;margin-left:auto}.coachform{display:flex;gap:8px}.coachform input{flex:1;background:#0b0e12;color:var(--text);border:1px solid var(--line);border-radius:10px;padding:12px}.toast{position:fixed;right:18px;bottom:18px;background:#171d23;border:1px solid var(--line);padding:12px 15px;border-radius:11px;display:none}.toast.show{display:block}
+@media(max-width:950px){.app{grid-template-columns:1fr}.side{border-right:0;border-bottom:1px solid var(--line);padding:10px}.brand{padding:7px}.nav{display:flex;overflow:auto}.nav button{white-space:nowrap}.span3,.span4,.span6,.span8{grid-column:1/-1}.main{padding:15px}}@media(max-width:600px){.formgrid{grid-template-columns:1fr}.title{font-size:25px}}
+</style>
+</head>
+<body>
+<div id="auth" class="auth"><div class="authbox">
+  <div class="brand">Mass<span>Up</span> V2</div>
+  <div class="eyebrow">16+ · suivi intelligent</div><h1 id="authTitle">Bienvenue.</h1>
+  <p class="muted">Nutrition, entraînement, progression et coach dans une seule app.</p>
+  <div id="authError" class="notice hidden"></div>
+  <div class="field"><label>Email</label><input id="email" type="email" placeholder="toi@email.com"></div>
+  <div class="field"><label>Mot de passe (8 caractères minimum)</label><input id="password" type="password" placeholder="••••••••"></div>
+  <button class="btn primary" style="width:100%" onclick="submitAuth()">Continuer</button>
+  <p class="muted" style="text-align:center;font-size:13px"><span id="authSwitchText">Pas encore de compte ?</span> <button class="btn" onclick="toggleAuth()">Créer un compte</button></p>
+</div></div>
+
+<div id="app" class="app hidden">
+<aside class="side"><div class="brand">Mass<span>Up</span></div><div class="nav">
+<button class="active" data-v="dashboard">◉ Dashboard</button><button data-v="nutrition">⌁ Nutrition</button><button data-v="workout">▣ Sport</button><button data-v="progress">↗ Progression</button><button data-v="coach">✦ Coach IA</button><button data-v="profile">⚙ Profil</button><button onclick="logout()">↪ Déconnexion</button>
+</div></aside>
+<main class="main">
+<header class="top"><div><div class="eyebrow">MassUp V2</div><div class="title" id="hello">Ta progression.</div></div><div class="avatar" id="avatar">M</div></header>
+
+<section id="dashboard" class="view"><div class="grid">
+<div class="card kpi span3"><div class="label">Poids</div><div class="value" id="weight">—</div><div class="muted" id="weightSub"></div></div>
+<div class="card kpi span3"><div class="label">Calories indicatives</div><div class="value" id="calories">—</div><div class="muted" id="calorieSub"></div></div>
+<div class="card kpi span3"><div class="label">Protéines</div><div class="value" id="protein">—</div><div class="muted">repère</div></div>
+<div class="card kpi span3"><div class="label">Séances</div><div class="value" id="sessions">0</div><div class="muted">10 dernières</div></div>
+<div class="card span8"><div class="between"><h2>Aujourd'hui</h2><button class="btn primary" onclick="openFood()">+ Aliment</button></div><div class="between"><span class="muted">Calories</span><b><span id="eaten">0</span> / <span id="target">—</span> kcal</b></div><div class="progress" style="margin:9px 0 15px"><i id="bar" style="width:0%"></i></div><div id="todayFoods"></div></div>
+<div class="card span4"><h2>Prochaine séance</h2><h3>Full Body</h3><p class="muted">Squat · Pompes · Row · Gainage</p><button class="btn primary" onclick="show('workout')">Voir la séance</button></div>
+<div class="card span8"><div class="between"><h2>Progression</h2><button class="btn" onclick="openWeight()">+ Pesée</button></div><div id="chart" class="chart"></div></div>
+<div class="card span4"><h2>Coach</h2><p class="muted">Besoin d'aide pour un repas ou une séance ?</p><button class="btn primary" onclick="show('coach')">Parler à l'IA</button></div>
+</div></section>
+
+<section id="nutrition" class="view hidden"><div class="grid">
+<div class="card full"><div class="between"><div><div class="eyebrow">Nutrition</div><h2>Journal du jour</h2></div><button class="btn primary" onclick="openFood()">+ Ajouter</button></div><div class="grid" style="margin-top:10px">
+<div class="card kpi span3"><div class="label">Calories</div><div class="value" id="nCal">0</div></div><div class="card kpi span3"><div class="label">Protéines</div><div class="value" id="nPro">0 g</div></div><div class="card kpi span3"><div class="label">Glucides</div><div class="value" id="nCarb">0 g</div></div><div class="card kpi span3"><div class="label">Lipides</div><div class="value" id="nFat">0 g</div></div></div><div id="foodList"></div></div>
+<div class="card span8"><h2>Bibliothèque rapide</h2><div id="foodLibrary"></div></div><div class="card span4"><h2>Repères</h2><p class="muted">Pour 16–17 ans, MassUp ne force pas un objectif calorique de prise de masse. L'accent est mis sur des repas variés, réguliers, l'activité et le suivi.</p></div>
+</div></section>
+
+<section id="workout" class="view hidden"><div class="grid"><div class="card full"><div class="eyebrow">Sport</div><h2>Programme</h2><div id="workouts"></div></div></div></section>
+
+<section id="progress" class="view hidden"><div class="grid"><div class="card full"><div class="between"><h2>Poids dans le temps</h2><button class="btn primary" onclick="openWeight()">+ Pesée</button></div><div id="bigChart" class="chart" style="height:320px"></div></div><div class="card full"><h2>Historique</h2><div id="history"></div></div></div></section>
+
+<section id="coach" class="view hidden"><div class="card full coach"><div><div class="eyebrow">Coach IA</div><h2>Ton assistant</h2><p class="muted">L'IA ne remplace pas un médecin ou un diététicien.</p></div><div class="messages" id="messages"><div class="msg ai">Salut 👋 Je peux t'aider à organiser tes repas, ton entraînement et ton suivi.</div></div><div class="coachform"><input id="coachInput" placeholder="Ex : que faire si j'ai raté ma séance ?"><button class="btn primary" onclick="ask()">Envoyer</button></div></div></section>
+
+<section id="profile" class="view hidden"><div class="card"><div class="eyebrow">Profil</div><h2>Mes informations</h2><div id="growth" class="notice hidden"></div><div class="formgrid">
+<div class="field"><label>Prénom</label><input id="pName"></div><div class="field"><label>Âge (16+)</label><input id="pAge" type="number" min="16" max="100"></div>
+<div class="field"><label>Sexe</label><select id="pSex"><option value="male">Homme</option><option value="female">Femme</option></select></div>
+<div class="field"><label>Taille (cm)</label><input id="pHeight" type="number"></div><div class="field"><label>Poids (kg)</label><input id="pWeight" type="number" step=".1"></div>
+<div class="field"><label>Activité</label><select id="pActivity"><option value="1.2">Faible</option><option value="1.375">Légère</option><option value="1.55">Modérée</option><option value="1.725">Élevée</option></select></div>
+<div class="field"><label>Objectif</label><select id="pGoal"><option value="mass">Prise de masse</option><option value="weight">Prise de poids</option><option value="maintain">Maintien</option></select></div>
+<div class="field"><label>Séances / semaine</label><select id="pDays"><option>2</option><option selected>3</option><option>4</option><option>5</option></select></div>
+</div><button class="btn primary" style="margin-top:15px" onclick="saveProfile()">Enregistrer</button></div></section>
+</main></div>
+
+<div id="foodModal" class="modal hidden"><div class="modalbox"><div class="modalhead"><h2>Ajouter un aliment</h2><button class="btn" onclick="closeModal('foodModal')">×</button></div><div class="formgrid">
+<div class="field"><label>Aliment</label><input id="fName"></div><div class="field"><label>Quantité</label><input id="fQty" placeholder="100 g"></div><div class="field"><label>Calories</label><input id="fCal" type="number"></div><div class="field"><label>Protéines</label><input id="fPro" type="number" step=".1"></div><div class="field"><label>Glucides</label><input id="fCarb" type="number" step=".1"></div><div class="field"><label>Lipides</label><input id="fFat" type="number" step=".1"></div></div><button class="btn primary" style="margin-top:15px" onclick="addFood()">Ajouter</button></div></div>
+<div id="weightModal" class="modal hidden"><div class="modalbox"><div class="modalhead"><h2>Nouvelle pesée</h2><button class="btn" onclick="closeModal('weightModal')">×</button></div><div class="field"><label>Poids (kg)</label><input id="wValue" type="number" step=".1"></div><button class="btn primary" onclick="addWeight()">Enregistrer</button></div></div>
+<div id="toast" class="toast"></div>
+
+<script>
+let token=localStorage.getItem("massup_token")||"", data=null, register=false;
+const library=[["Avoine",380,13,67,7],["Riz cuit",130,2.7,28,0.3],["Poulet",165,31,0,3.6],["Œufs",143,13,1,10],["Banane",89,1.1,23,0.3],["Yaourt grec",97,9,4,5],["Noix",654,15,14,65],["Lentilles cuites",116,9,20,0.4]];
+const plans=[
+["Lundi","Haut du corps",[["Pompes","3 × 8–12"],["Row","3 × 10–12"],["Développé épaules","3 × 8–12"],["Curl biceps","2 × 10–15"],["Gainage","3 × 30–45 s"]]],
+["Mercredi","Jambes",[["Squat","3 × 8–12"],["Fentes","3 × 8–10/jambe"],["Hip thrust","3 × 10–15"],["Mollets","3 × 12–20"],["Dead bug","3 × 8–12"]]],
+["Vendredi","Full Body",[["Goblet squat","3 × 8–12"],["Pompes","3 × 8–12"],["Row","3 × 10–12"],["Hip hinge","3 × 10–12"],["Planche","3 × 30–60 s"]]]
+];
+function api(url,opt={}){opt.headers={...(opt.headers||{}),Authorization:"Bearer "+token,"Content-Type":"application/json"};return fetch(url,opt).then(async r=>{let x=await r.json();if(!r.ok)throw new Error(x.error||"Erreur");return x})}
+function toggleAuth(){register=!register;authTitle.textContent=register?"Créer ton compte.":"Bienvenue.";authSwitchText.textContent=register?"Déjà un compte ?":"Pas encore de compte ?";event.target.textContent=register?"Se connecter":"Créer un compte"}
+async function submitAuth(){try{const r=await fetch(register?"/api/auth/register":"/api/auth/login",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({email:email.value,password:password.value})});const x=await r.json();if(!r.ok)throw new Error(x.error);token=x.token;localStorage.setItem("massup_token",token);await boot()}catch(e){authError.textContent=e.message;authError.classList.remove("hidden")}}
+async function boot(){try{data=await api("/api/dashboard");if(!data.profile){showProfileFirst()}else{showApp();render()}}catch(e){localStorage.removeItem("massup_token");token="";auth.classList.remove("hidden")}}
+function showApp(){auth.classList.add("hidden");app.classList.remove("hidden")}
+function showProfileFirst(){showApp();show("profile");toast("Complète ton profil pour commencer.")}
+function logout(){localStorage.removeItem("massup_token");location.reload()}
+document.querySelectorAll(".nav button[data-v]").forEach(b=>b.onclick=()=>show(b.dataset.v));
+function show(v){document.querySelectorAll(".view").forEach(x=>x.classList.add("hidden"));document.getElementById(v).classList.remove("hidden");document.querySelectorAll(".nav button").forEach(x=>x.classList.toggle("active",x.dataset.v===v))}
+function render(){const p=data.profile,m=data.metrics||{},f=data.food||{};hello.textContent=`Bonjour ${p.name||"toi"}.`;avatar.textContent=(p.name||"M")[0].toUpperCase();weight.textContent=p.weight_kg+" kg";weightSub.textContent=p.height_cm+" cm · "+p.age+" ans";calories.textContent=m.calories?m.calories.toLocaleString("fr-FR"):"Mode croissance";calorieSub.textContent=m.minor?"16–17 ans · suivi sans surplus agressif":"repère indicatif";protein.textContent=m.protein?m.protein+" g":"—";sessions.textContent=data.workouts.length;eaten.textContent=Math.round(f.calories||0);target.textContent=m.calories?m.calories.toLocaleString("fr-FR"):"—";bar.style.width=m.calories?Math.min(100,(f.calories||0)/m.calories*100)+"%":"0%";todayFoods.innerHTML=data.foods.map(food).join("")||'<p class="muted">Aucun aliment aujourd’hui.</p>';nCal.textContent=Math.round(f.calories||0);nPro.textContent=Math.round(f.protein||0)+" g";nCarb.textContent=Math.round(f.carbs||0)+" g";nFat.textContent=Math.round(f.fat||0)+" g";foodList.innerHTML=data.foods.map(food).join("")||'<p class="muted">Ton journal est vide.</p>';foodLibrary.innerHTML=library.map(x=>`<div class="listrow"><span><b>${x[0]}</b><br><span class="muted">${x[2]}g prot · ${x[3]}g gluc · ${x[4]}g lip / 100g</span></span><button class="btn" onclick="quickFood('${x[0]}',${x[1]},${x[2]},${x[3]},${x[4]})">Ajouter</button></div>`).join("");workouts.innerHTML=plans.map(plan=>`<div class="workout"><div class="between"><div><b>${plan[0]} — ${plan[1]}</b><div class="muted">~45 min</div></div><button class="btn primary" onclick="completeWorkout('${plan[1]}')">Terminé</button></div>${plan[2].map(e=>`<div class="exercise"><span>${e[0]}</span><span>${e[1]}</span></div>`).join("")}</div>`).join("");pName.value=p.name||"";pAge.value=p.age;pSex.value=p.sex;pHeight.value=p.height_cm;pWeight.value=p.weight_kg;pActivity.value=p.activity;pGoal.value=p.goal;pDays.value=p.days_per_week;growth.classList.toggle("hidden",p.age>=18);growth.innerHTML="<b>🛡️ Mode croissance 16–17 ans</b><br><span class='muted'>Pas de surplus calorique agressif ni de poids cible imposé. L'app aide au suivi et à l'organisation.</span>";draw("chart",230);draw("bigChart",320);history.innerHTML=data.weights.slice().reverse().map(x=>`<div class="listrow"><span>${new Date(x.measured_on).toLocaleDateString("fr-FR")}</span><b>${x.weight_kg} kg</b></div>`).join("")}
+function food(x){return `<div class="listrow"><span><b>${x.name}</b><br><span class="muted">${x.quantity||""} · ${x.protein}g prot · ${x.carbs}g gluc · ${x.fat}g lip</span></span><b>${Math.round(x.calories)} kcal</b></div>`}
+function draw(id,H){const el=document.getElementById(id),a=data.weights.map(x=>+x.weight_kg);if(!a.length){el.innerHTML='<p class="muted">Ajoute une pesée pour voir la courbe.</p>';return}const W=800,p=35,min=Math.min(...a)-1,max=Math.max(...a)+1,pts=a.map((v,i)=>[p+i*(W-2*p)/Math.max(1,a.length-1),p+(max-v)/(max-min)*(H-2*p)]),d=pts.map((q,i)=>(i?"L":"M")+q[0]+","+q[1]).join(" ");el.innerHTML=`<svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none"><line class="axis" x1="${p}" y1="${H-p}" x2="${W-p}" y2="${H-p}"/><path class="line" d="${d}"/>${pts.map(q=>`<circle class="dot" cx="${q[0]}" cy="${q[1]}" r="5"/>`).join("")}</svg>`}
+function openFood(){foodModal.classList.remove("hidden")}function openWeight(){wValue.value=data.profile.weight_kg;weightModal.classList.remove("hidden")}function closeModal(id){document.getElementById(id).classList.add("hidden")}
+async function addFood(){await api("/api/foods",{method:"POST",body:JSON.stringify({name:fName.value,quantity:fQty.value,calories:+fCal.value,protein:+fPro.value,carbs:+fCarb.value,fat:+fFat.value})});closeModal("foodModal");data=await api("/api/dashboard");render();toast("Aliment ajouté ✓")}
+function quickFood(n,c,p,carb,fat){fName.value=n;fQty.value="100 g";fCal.value=c;fPro.value=p;fCarb.value=carb;fFat.value=fat;openFood()}
+async function addWeight(){await api("/api/weigh-ins",{method:"POST",body:JSON.stringify({weight_kg:+wValue.value})});closeModal("weightModal");data=await api("/api/dashboard");render();toast("Pesée enregistrée ✓")}
+async function saveProfile(){const p={name:pName.value,age:+pAge.value,sex:pSex.value,height_cm:+pHeight.value,weight_kg:+pWeight.value,activity:+pActivity.value,goal:pGoal.value,days_per_week:+pDays.value};if(p.age<16){toast("MassUp est conçu pour les 16 ans et plus.");return}await api("/api/profile",{method:"PUT",body:JSON.stringify(p)});data=await api("/api/dashboard");render();show("dashboard");toast("Profil enregistré ✓")}
+async function completeWorkout(title){await api("/api/workouts",{method:"POST",body:JSON.stringify({title,duration_minutes:45})});data=await api("/api/dashboard");render();toast("Séance enregistrée ✓")}
+async function ask(){const v=coachInput.value.trim();if(!v)return;messages.insertAdjacentHTML("beforeend",`<div class="msg me">${esc(v)}</div>`);coachInput.value="";try{const r=await api("/api/coach",{method:"POST",body:JSON.stringify({message:v})});messages.insertAdjacentHTML("beforeend",`<div class="msg ai">${esc(r.reply)}</div>`);messages.scrollTop=messages.scrollHeight}catch(e){toast(e.message)}}
+function esc(s){return s.replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]))}function toast(t){const x=document.getElementById("toast");x.textContent=t;x.classList.add("show");setTimeout(()=>x.classList.remove("show"),2300)}
+if(token)boot();
+</script>
+</body></html>
